@@ -1,8 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Find your Vector Friends with Weaviate Vector Search
 
 ## Getting Started
 
-First, run the development server:
+Make sure you have a .env with the following available to your project
+
+```
+WEAVIATE_HOST_URL=<INSERT_YOUR_HOST_URL>
+WEAVIATE_API_KEY=<INSERT_YOUR_API_KEY>
+OPENAI_API_KEY=<INSERT_YOUR_API_KEY>
+```
+
+Now, run the development server:
+
+```bash
+nvm use 19.19.0
+```
 
 ```bash
 npm run dev
@@ -22,15 +34,6 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This project was built on Weaviate using NextJS and Daisy. 
 
 ## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
