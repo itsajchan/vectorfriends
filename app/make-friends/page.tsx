@@ -17,7 +17,7 @@ export default function Home() {
     agreeTerms: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -25,7 +25,7 @@ export default function Home() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     const response = await fetch(
@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen min-w-full p-10 bg-gradient-radial from-yellow-200 via-sky-200 to-green-300 flex items-center justify-center">
-        <Image src="/weaviate-logo.svg" width={200} height={200} />
+        <Image src="/weaviate-logo.svg" width={200} height={200} alt={"Weaviate logo"}/>
         <h1 className="text-center text-4xl mt-10 pb-10">
             Find My Vector Friends
         </h1>
@@ -66,9 +66,9 @@ export default function Home() {
         :
                 
             <>
-            { success ? <div>Alright, you're set! Return back to the presenter!</div> : 
+            { success ? <div>Alright, you&apos;re set! Return back to the presenter!</div> : 
 
-                <>{error ? <div>Okay sorry, there's been an error. I'm logging the error, if you can let me know what it is, that would be great!</div> :    
+                <>{error ? <div>Okay sorry, there&apos;s been an error. I&apos;m logging the error, if you can let me know what it is, that would be great!</div> :    
 
                     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
                         <label>
@@ -79,8 +79,31 @@ export default function Home() {
                         <label>
                             Email Address<br/>
                             <input type="email" placeholder="favoritevectordb@weaviate.io" name="email"  className="input input-bordered w-full" onChange={handleChange}  />
-
                         </label>
+{/* 
+                        <div className="flex space-x-2">
+
+                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
+                            <div className="pb-1">
+                                I'm using Weaviate for a project today!
+                            </div>
+                        </div>
+                        <div className="flex space-x-2">
+
+                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
+                            <div className="pb-1">
+                                I want to use Weaviate in a new project!
+                            </div>
+                        </div>
+                        <div className="flex space-x-2">
+
+                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
+                            <div className="pb-1">
+                                I want you to send me an email with the notes from this talk and more information about Weaviate!
+                            </div>
+                        </div> */}
+
+
                         <label>
                             What’s the technology stack that you’re most comfortable with?
                             <input type="text" placeholder="NextJS + Django + PostgreSQL etc" name="techStack"  className="input input-bordered w-full" onChange={handleChange}  />
@@ -101,7 +124,7 @@ export default function Home() {
 
                             <input type="checkbox"  className="checkbox" name="agreeTerms" onChange={handleChange}  />
                             <div className="pb-1">
-                            Agree to terms of service
+                                By clicking this checkbox, I agree to share my information with the presenter and other participants of this event. I understand that this information will be shared publicly and that I am responsible for the information I provide.
                             </div>
                         </div>
 

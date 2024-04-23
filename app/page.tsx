@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import Spline from '@splinetool/react-spline';
 
 export default function Home() {
   return (
@@ -16,8 +19,8 @@ export default function Home() {
 
         <div className="mr-20" >
 
-          <script type="module" src="https://unpkg.com/@splinetool/viewer@1.1.3/build/spline-viewer.js"></script>
-          <spline-viewer url="https://prod.spline.design/ITDkMG3oMx7xK0fp/scene.splinecode"></spline-viewer>
+          <Spline scene="https://prod.spline.design/ITDkMG3oMx7xK0fp/scene.splinecode" />
+
         </div>
         </div>
     </div>

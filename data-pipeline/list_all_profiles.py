@@ -1,6 +1,6 @@
-
-import weaviate
 import os
+import pprint
+import weaviate
 
 from dotenv import load_dotenv
 
@@ -14,19 +14,17 @@ client = weaviate.connect_to_wcs(
     }
 )
 
-
 try:
     profiles = client.collections.get("Profile").with_tenant("testTenant")
-    named_vectors = ["techStack", "openSource", "learnTech"]
+    pp = pprint.PrettyPrinter(indent=4)
 
 
-    data_object = profiles.query.near_text('data', target_vector='learnTech', include_vector=named_vectors)
-    
+    for item in profiles.iterator():
+        pp.pprint({
+            'uuid': item.uuid,
+            'properties': item.properties
+        })
 
-    print(data_object)
-
-    for n in named_vectors:
-        print(f"Vector '{n}': {data_object.vector[n][:5]}...")
 
 finally:
     client.close()

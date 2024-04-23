@@ -1,7 +1,7 @@
-
-from weaviate.classes.config import Configure, Property, DataType
-import weaviate
 import os
+import weaviate
+from weaviate.classes.tenants import Tenant
+from weaviate.classes.config import Configure, Property, DataType
 
 from dotenv import load_dotenv
 
@@ -16,7 +16,7 @@ client = weaviate.connect_to_wcs(
 )
 
 try:
-    client.collections.create(
+    profiles_collection = client.collections.create(
         "Profile",
         properties=[  # Define properties
             Property(name="firstName", data_type=DataType.TEXT),
@@ -40,8 +40,19 @@ try:
                 name="learnTech", source_properties=["learnTech"]
             ),
         ],
+        multi_tenancy_config=Configure.multi_tenancy(True)
     )
 
+    profiles_collection.tenants.create(
+        tenants=[
+            Tenant(name="testTenant"),
+            Tenant(name="GitHubApr23"),
+        ]
+    )
+
+    tenants = profiles_collection.tenants.get()
+
+    print(tenants)
 
 finally:
     client.close()

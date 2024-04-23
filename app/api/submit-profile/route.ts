@@ -8,9 +8,9 @@ export async function POST(request: NextRequest) {
 
     const client: WeaviateClient = weaviate.client({
       scheme: 'https',
-      host: process.env.WEAVIATE_HOST_URL,  // Replace with your Weaviate endpoint
-      apiKey: new ApiKey(process.env.WEAVIATE_API_KEY),  // Replace with your Weaviate instance API key
-      headers: { 'X-OpenAI-Api-Key': process.env.OPENAI_API_KEY},  // Replace with your inference API key
+      host: process.env.WEAVIATE_HOST_URL || "",  // Replace with your Weaviate endpoint
+      apiKey: new ApiKey(process.env.WEAVIATE_API_KEY|| ""),  // Replace with your Weaviate instance API key
+      headers: { 'X-OpenAI-Api-Key': process.env.OPENAI_API_KEY || ""},  // Replace with your inference API key
     });
 
     try {
@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
       let result = await client.data
         .creator()
         .withClassName('Profile')
+        .withTenant('GitHubApr23')
         .withProperties({
           email: email,
           firstName: firstName,

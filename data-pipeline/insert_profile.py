@@ -14,14 +14,14 @@ client = weaviate.connect_to_wcs(
 )
 
 try:
-    profiles = client.collections.get("Profile")
+    profiles = client.collections.get("Profile").with_tenant("testTenant")
 
     uuid = profiles.data.insert({
-        "techStack": "React + Flask + MySQL",
-        "learnTech": "Machine Learning",
-        "openSource": "LibreText",
-        "email": "charlie@example.com",
-        "firstName": "Charlie",
+       "techStack": "Angular + Django + Redis",
+        "learnTech": "Artificial Intelligence and Natural Language Processing",
+        "openSource": "Image Classification - A tool built with TensorFlow to classify images",
+        "email": "Martin.chen@icloud.com",
+        "firstName": "Martin"
 })
 
     print(uuid)  # the return value is the object's UUID
