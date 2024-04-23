@@ -1,4 +1,5 @@
 import os
+import json
 import resend
 import ollama
 import weaviate
@@ -119,7 +120,17 @@ try:
         for person in results:
 
             try:
-    
+
+                # Load the sent emails data
+                with open('sent_emails.json', 'r') as file:
+                    data = json.load(file)
+
+                # Check if the email pair already exists
+                email_pair = sorted([person.get('email'), profile.properties.get('email')])
+                if any(sorted(email['to'].split(' - ')) == email_pair for email in data):
+                    print("Email already sent to this pair. Skipping...")
+                    continue
+
                 print(person.get('distance'), person.get('email'), person.get('uuid'))
 
                 task1 = f'''
@@ -174,6 +185,7 @@ try:
                             <a href="https://hubs.ly/Q02tMNTM0">Free Weaviate Trial</a>
                             <a href="https://lu.ma/dspy">DSPy Event with Weaviate + Arize + Cohere + DSpy</a>
                             <a href="https://lu.ma/GitHubHackNight-May14">May 14 Hack Night here at GitHub</a>
+                            <a href="https://github.com/itsajchan/vectorfriends">GitHub Repo for this project</a>
                         </li>
                     </ul>
 
@@ -183,6 +195,16 @@ try:
                 
                 '''
                 })
+
+                with open('sent_emails.json', 'r+') as file:
+                    data = json.load(file)
+                    data.append({
+                        'to': f"{person.get('email')} - {profile.properties.get('email')}"
+                    })
+                    file.seek(0)
+                    json.dump(data, file, indent=4)
+                    file.truncate()
+
             except Exception as e:
                 print("There was an error sending the email")
                 print(e)

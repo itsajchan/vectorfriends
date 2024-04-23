@@ -50,4 +50,6 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Learn More
 
-Come to [Weaviate](https://weaviate.io) to learn more about Weaviate.
+* Come to [Weaviate](https://weaviate.io) to learn more about Weaviate.
+* Check out this [Hybrid Search webinar](https://events.weaviate.io/hybrid-search-webinar).
+* Get started on [Weaviate Cloud Services](https://console.weaviate.cloud) today!

@@ -1,4 +1,5 @@
 import os
+import json
 import resend
 import ollama
 import weaviate
@@ -37,69 +38,69 @@ client = weaviate.connect_to_wcs(
 try:
     profiles = client.collections.get("Profile").with_tenant("testTenant")
 
-    for item in profiles.iterator():
+    for profile in profiles.iterator():
 
         print("---- Examining ----")
-        print(f"{item.properties.get('firstName')} - {item.properties.get('email')}")
+        print(f"{profile.properties.get('firstName')} - {profile.properties.get('email')}")
 
         res1 = profiles.query.near_text(
-            item.properties.get('openSource'),
+            profile.properties.get('openSource'),
             target_vector='learnTech',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res2 = profiles.query.near_text(
-            item.properties.get('techStack'),
+            profile.properties.get('techStack'),
             target_vector='learnTech',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res3 = profiles.query.near_text(
-            item.properties.get('learnTech'),
+            profile.properties.get('learnTech'),
             target_vector='learnTech',
             limit=2,
             return_metadata=MetadataQuery(distance=True)
         )
         
         res4 = profiles.query.near_text(
-            item.properties.get('learnTech'),
+            profile.properties.get('learnTech'),
             target_vector='openSource',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res5 = profiles.query.near_text(
-            item.properties.get('techStack'),
+            profile.properties.get('techStack'),
             target_vector='openSource',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res6 = profiles.query.near_text(
-            item.properties.get('openSource'),
+            profile.properties.get('openSource'),
             target_vector='openSource',
             limit=2,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res7 = profiles.query.near_text(
-            item.properties.get('learnTech'),
+            profile.properties.get('learnTech'),
             target_vector='techStack',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res8 = profiles.query.near_text(
-            item.properties.get('openSource'),
+            profile.properties.get('openSource'),
             target_vector='techStack',
             limit=1,
             return_metadata=MetadataQuery(distance=True)
         )
 
         res9 = profiles.query.near_text(
-            item.properties.get('techStack'),
+            profile.properties.get('techStack'),
             target_vector='techStack',
             limit=2,
             return_metadata=MetadataQuery(distance=True)
@@ -110,13 +111,25 @@ try:
         responses = [res1, res2, res3, res4, res5, res6, res7, res8, res9]
 
         for response in responses:
-            process_objects(response.objects, results, item.properties.get('email'))
+            process_objects(response.objects, results, profile.properties.get('email'))
 
         print('----------------')
         print('----------------')
         print('----------------')
 
         for person in results:
+
+            # Load the sent emails data
+            with open('sent_emails.json', 'r') as file:
+                data = json.load(file)
+
+            # Check if the email pair already exists
+            email_pair = sorted([person.get('email'), "SECOND_EMAIL"])
+            print(email_pair)
+            if any(sorted(email['to'].split(' - ')) == email_pair for email in data):
+                print("Email already sent to this pair. Skipping...")
+                continue
+
             print(person.get('distance'), person.get('email'), person.get('uuid'))
 
             task1 = f'''
@@ -126,7 +139,7 @@ try:
                 {person}
 
                 Profile 2:
-                {item.properties}
+                {profile.properties}
             '''
 
             print(task1)
@@ -144,7 +157,7 @@ try:
 
             r = resend.Emails.send({
             "from": "Adam From Weaviate <no-reply@ajchan.io>",
-            "to": ["achan99@gmail.com", "adam@weaviate.io"],
+            "to": ["adam@weaviate.io"],
             "subject": "Connecting you two!",
             "html": f'''Hi there! I'd love to put you two in touch as you have similarities as identified by Weaviate Vector Search.
             
@@ -180,6 +193,15 @@ try:
             
             '''
             })
+
+            with open('sent_emails.json', 'r+') as file:
+                data = json.load(file)
+                data.append({
+                    'to': f"adam@weaviate.io - SECOND_EMAIL"
+                })
+                file.seek(0)
+                json.dump(data, file, indent=4)
+                file.truncate()
 
             import sys
             sys.exit()
