@@ -15,7 +15,7 @@ client = weaviate.connect_to_wcs(
 )
 
 try:
-    profiles = client.collections.get("Profile").with_tenant("testTenant")
+    profiles = client.collections.get("Profile").with_tenant("GitHubApr23")
     pp = pprint.PrettyPrinter(indent=4)
 
 

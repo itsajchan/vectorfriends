@@ -1,5 +1,6 @@
 import os
-# import resend
+import resend
+import ollama
 import weaviate
 from weaviate.classes.query import MetadataQuery
 
@@ -115,11 +116,75 @@ try:
         print('----------------')
         print('----------------')
 
-        for profiles in results:
-            print(profiles.get('distance'), profiles.get('email'), profiles.get('uuid'))
+        for person in results:
+            print(person.get('distance'), person.get('email'), person.get('uuid'))
 
-        import sys
-        sys.exit()
+            task1 = f'''
+                Given the following profiles on these two people, create 3 super short prompts to jumpstart their conversation. Don't respond with addition context, just give the prompts as a valid HTML bulleted unordered list.
+
+                Profile 1:
+                {person}
+
+                Profile 2:
+                {item.properties}
+            '''
+
+            print(task1)
+
+            response = ollama.chat(model='llama3:8b-instruct-q5_1', messages=[
+            {
+                'role': 'user',
+                'content': f'''{task1}''',
+            },
+            ])
+
+            print(response['message']['content'])
+
+            resend.api_key = os.environ.get("RESEND_API_KEY")
+
+            r = resend.Emails.send({
+            "from": "Adam From Weaviate <no-reply@ajchan.io>",
+            "to": ["achan99@gmail.com", "adam@weaviate.io"],
+            "subject": "Connecting you two!",
+            "html": f'''Hi there! I'd love to put you two in touch as you have similarities as identified by Weaviate Vector Search.
+            
+                <br/><br/>
+
+                {response['message']['content']}
+
+                <br/><br/>
+
+                Please stay in touch with me too! My name is Adam, and you can connect with me on LinkedIn and Twitter here:
+                <ul>
+                    <li><a href="https://www.linkedin.com/in/itsajchan/">LinkedIn</a></li>
+                    <li><a href="https://www.twitter.com/itsajchan/">Twitter</a></li>
+                </ul>
+
+                <br/><br/>
+
+                And if you ever want to build anything with <a href="https://www.weaviate.io">Weaviate</a>, I'm here to help!
+
+                <br/><br/>
+                Here are the upcoming events and other exciting ways to see what Weaviate is getting up to these days.
+                <ul>
+                    <li>
+                        <a href="https://hubs.ly/Q02tMNTM0">Free Weaviate Trial</a>
+                        <a href="https://lu.ma/dspy">DSPy Event with Weaviate + Arize + Cohere + DSpy</a>
+                        <a href="https://lu.ma/GitHubHackNight-May14">May 14 Hack Night here at GitHub</a>
+                    </li>
+                </ul>
+
+                <br/><br/>
+                Best,<br/>
+                Adam
+            
+            '''
+            })
+
+            import sys
+            sys.exit()
+
+
 
 
 finally:

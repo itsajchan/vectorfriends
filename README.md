@@ -1,5 +1,15 @@
 # Find your Vector Friends with Weaviate Vector Search
 
+![VectorFriends Architecture Diagram](./VectorFriends.png)
+
+This project is a unique platform that leverages the power of Weaviate Vector Search to connect people based on their similarities. By analyzing various aspects of a user's profile, our system can identify and match individuals who share common traits, interests, or characteristics.
+
+The underlying technology is Weaviate, an open-source, AI Native Vector Database. Weaviate uses embedding models to determine semantically related data in high dimensional vector space to provide a unique search experience that allows you to not just match exact terms but also related concepts.
+
+In this application, we use this vector search capability to analyze user profiles and find the closest matches based on the vector distances. This allows us to suggest friends to users who are most similar to them, fostering connections that are more likely to be meaningful and rewarding.
+
+
+
 ## Getting Started
 
 Make sure you have a .env with the following available to your project
@@ -8,6 +18,12 @@ Make sure you have a .env with the following available to your project
 WEAVIATE_HOST_URL=<INSERT_YOUR_HOST_URL>
 WEAVIATE_API_KEY=<INSERT_YOUR_API_KEY>
 OPENAI_API_KEY=<INSERT_YOUR_API_KEY>
+```
+
+If you want this to send emails for you, add your Resend API Key to `.env`.
+
+```
+RESEND_API_KEY=<INSERT_YOUR_RESEND_API_KEY>
 ```
 
 Now, run the development server:
@@ -34,6 +50,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Learn More
 
-This project was built on Weaviate using NextJS and Daisy. 
-
-## Deploy on Vercel
+Come to [Weaviate](https://weaviate.io) to learn more about Weaviate.
