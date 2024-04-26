@@ -29,7 +29,7 @@ RESEND_API_KEY=<INSERT_YOUR_RESEND_API_KEY>
 Now, run the development server:
 
 ```bash
-nvm use 19.19.0
+nvm use 19.9.0
 ```
 
 ```bash
