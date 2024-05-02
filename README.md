@@ -9,6 +9,12 @@ The underlying technology is Weaviate, an open-source, AI Native Vector Database
 In this application, we use this vector search capability to analyze user profiles and find the closest matches based on the vector distances. This allows us to suggest friends to users who are most similar to them, fostering connections that are more likely to be meaningful and rewarding.
 
 
+## Requirements
+- Create a Weaviate account, a collection, and create an API Key
+- Run the following python file to setup the collection
+```
+python3 data-pipline/define_collection.py
+```
 
 ## Getting Started
 

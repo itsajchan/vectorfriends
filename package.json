@@ -11,6 +11,7 @@
   "dependencies": {
     "@splinetool/react-spline": "^2.2.6",
     "@splinetool/runtime": "^1.1.5",
+    "neo4j-driver": "^5.20.0",
     "next": "14.2.2",
     "react": "^18",
     "react-dom": "^18",

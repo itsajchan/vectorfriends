@@ -36,7 +36,7 @@ client = weaviate.connect_to_wcs(
 )
 
 try:
-    profiles = client.collections.get("Profile").with_tenant("GitHubApr23")
+    profiles = client.collections.get("Profile").with_tenant(os.environ.get("EVENT_NAME"))
 
     for profile in profiles.iterator():
 

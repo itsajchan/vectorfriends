@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       let result = await client.data
         .creator()
         .withClassName('Profile')
-        .withTenant('GitHubApr23')
+        .withTenant(process.env.TENANT_ID || "")
         .withProperties({
           email: email,
           firstName: firstName,
@@ -38,6 +38,8 @@ export async function POST(request: NextRequest) {
         status: 200,
       });
     } catch (error) {
+
+      console.log(error)
 
       return new NextResponse(
         JSON.stringify(

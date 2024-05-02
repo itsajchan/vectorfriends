@@ -7,13 +7,17 @@ from dotenv import load_dotenv
 
 load_dotenv("../.env")
 
-client = weaviate.connect_to_wcs(
+try:
+  client = weaviate.connect_to_wcs(
     cluster_url=os.environ.get("WEAVIATE_HOST_URL"),
     auth_credentials=weaviate.auth.AuthApiKey(os.environ.get("WEAVIATE_API_KEY")),
     headers={
         "X-OpenAI-Api-Key": os.environ.get("OPENAI_API_KEY")
     }
-)
+  )
+except Exception as e:
+  print(e)
+
 
 try:
     profiles_collection = client.collections.create(
@@ -46,7 +50,7 @@ try:
     profiles_collection.tenants.create(
         tenants=[
             Tenant(name="testTenant"),
-            Tenant(name="GitHubApr23"),
+            Tenant(name=os.environ.get("EVENT_NAME")),
         ]
     )
 
