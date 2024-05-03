@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import QRCode from "qrcode";
+
 import { useState } from "react";
 
 export default function Home() {
@@ -28,28 +30,51 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    const response = await fetch(
-        "/api/submit-profile",
-        {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify(
-                form
-            )
-        }
-    );
-    const data = await response.json();
-    console.log(response.status)
 
+    // Store the email and firstName in localStorage
+    localStorage.setItem('email', form.email);
+    localStorage.setItem('firstName', form.firstName);
+
+    // const response = await fetch(
+    //     "/api/submit-profile",
+    //     {
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         method: "POST",
+    //         body: JSON.stringify(
+    //             form
+    //         )
+    //     }
+    // );
+    // const data = await response.json();
+    // console.log(response.status)
+    // Assume `responseData` is the data you received from the backend.
+    let responseData = "Some data from backend";
+
+    QRCode.toDataURL(responseData)
+    .then(url => {
+        console.log(url)
+    })
+    .catch(err => {
+        console.error(err)
+    })
     setLoading(false);
-    if (response.status == 200) {
-        setSuccess(true);
-    } else {
-        setError(true)
-        console.log(data)
-    }
+
+    QRCode.toDataURL(responseData)
+    .then(url => {
+        let img = document.getElementById('qrcode');
+        img.src = url;
+    })
+    .catch(err => {
+        console.error(err)
+    })
+    // if (response.status == 200) {
+    //     setSuccess(true);
+    // } else {
+    //     setError(true)
+    //     console.log(data)
+    // }
 
     // Handle form submission here
   };
@@ -66,7 +91,14 @@ export default function Home() {
         :
                 
             <>
-            { success ? <div>Alright, you&apos;re set! Return back to the presenter!</div> : 
+            { success ? <div>
+                
+                Alright, you&apos;re set! Return back to the presenter!
+                Here's your QR Code:
+                
+
+
+            </div> : 
 
                 <>{error ? <div>Okay sorry, there&apos;s been an error. I&apos;m logging the error, if you can let me know what it is, that would be great!</div> :    
 
@@ -139,6 +171,7 @@ export default function Home() {
             
             </>
         }
+        <div id="qrcode"></div>
     </div>
   );
 }
