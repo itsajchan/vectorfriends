@@ -1,5 +1,7 @@
+import neo4j from 'neo4j-driver'
 import { NextRequest, NextResponse } from 'next/server'
-import weaviate, { WeaviateClient, ObjectsBatcher, ApiKey } from 'weaviate-ts-client';
+import weaviate, { WeaviateClient, ObjectsBatcher, ApiKey } 
+from 'weaviate-ts-client';
 
 export async function POST(request: NextRequest) {
     const res = await request.json()
@@ -15,21 +17,41 @@ export async function POST(request: NextRequest) {
 
     try {
  
+      const properties = {
+        email: email,
+        firstName: firstName,
+        techStack: techStack,
+        openSource: openSource,
+        learnTech: learnTech,
+      }
+
+      // Send data to Weaviate
       let result = await client.data
         .creator()
         .withClassName('Profile')
-        .withTenant(process.env.TENANT_ID || "")
-        .withProperties({
-          email: email,
-          firstName: firstName,
-          techStack: techStack,
-          openSource: openSource,
-          learnTech: learnTech,
-        })
+        .withTenant(process.env.TENANT_ID || "tenant_id_missing")
+        .withProperties(properties)
         .do();
   
       console.log(JSON.stringify(result, null, 2));  // the returned value is the object
-  
+
+      const extendedProperties = {
+        ...properties,
+        tenant: process.env.TENANT_ID || "tenant_id_missing"
+      }
+
+      // Send data to an endpoint which will add the property data into an existing graph
+      const n4j_result = await fetch(process.env.NEO4J_IMPORT_URL || "", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': process.env.BASIC_AUTH || ""
+      },
+        body: JSON.stringify(extendedProperties)
+      });
+
+      console.log(n4j_result, null, 2);
+
       return new NextResponse(
         JSON.stringify(
           {
