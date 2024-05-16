@@ -8,15 +8,16 @@ from dotenv import load_dotenv
 load_dotenv("../.env")
 
 try:
-  client = weaviate.connect_to_wcs(
-    cluster_url=os.environ.get("WEAVIATE_HOST_URL"),
-    auth_credentials=weaviate.auth.AuthApiKey(os.environ.get("WEAVIATE_API_KEY")),
-    headers={
-        "X-OpenAI-Api-Key": os.environ.get("OPENAI_API_KEY")
-    }
-  )
+    client = weaviate.connect_to_wcs(
+        cluster_url=os.environ.get("WEAVIATE_HOST_URL"),
+        auth_credentials=weaviate.auth.AuthApiKey(os.environ.get("WEAVIATE_API_KEY")),
+        headers={"X-OpenAI-Api-Key": os.environ.get("OPENAI_API_KEY")},
+    )
 except Exception as e:
-  print(e)
+    print(
+        f'Could not initiate Weaviate client to url: {os.environ.get("WEAVIATE_HOST_URL")}'
+    )
+    print(e)
 
 
 try:
@@ -29,7 +30,6 @@ try:
             Property(name="openSource", data_type=DataType.TEXT),
             Property(name="learnTech", data_type=DataType.TEXT),
         ],
-
         vectorizer_config=[
             # Set a named vector
             Configure.NamedVectors.text2vec_openai(
@@ -44,13 +44,13 @@ try:
                 name="learnTech", source_properties=["learnTech"]
             ),
         ],
-        multi_tenancy_config=Configure.multi_tenancy(True)
+        multi_tenancy_config=Configure.multi_tenancy(True),
     )
 
     profiles_collection.tenants.create(
         tenants=[
             Tenant(name="testTenant"),
-            Tenant(name=os.environ.get("EVENT_NAME")),
+            Tenant(name=os.environ.get("TENANT_ID")),
         ]
     )
 

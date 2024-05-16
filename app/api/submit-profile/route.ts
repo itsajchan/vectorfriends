@@ -33,8 +33,12 @@ export async function POST(request: NextRequest) {
         .withProperties(properties)
         .do();
   
+      // TODO: Extract shared UUID
+      // const uuid = result.uuid
+
       console.log(JSON.stringify(result, null, 2));  // the returned value is the object
 
+      // TODO: Pass shared UUID to Neo4j
       const extendedProperties = {
         ...properties,
         tenant: process.env.TENANT_ID || "tenant_id_missing"
