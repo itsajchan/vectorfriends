@@ -26,6 +26,8 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+
+    // first grab the linkedin data using Diffbot on Next Server
     const response = await fetch(
         "/api/extract-linkedin-data",
         {
@@ -40,6 +42,26 @@ export default function Home() {
     );
     const data = await response.json();
     console.log(response.status)
+
+    // Now with the Diffbot data, we can ingest it into Weaviate
+    const weaviate_response = await fetch(
+        "/api/vector-ingest",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify(
+                data
+            )
+        }
+    );
+    const data2 = await weaviate_response.json();
+    console.log(weaviate_response.status)
+
+    // Now with the Diffbot data, we can ingest it into Neo4jason
+    // TODO: Jason :]
+
 
     setLoading(false);
     if (response.status == 200) {

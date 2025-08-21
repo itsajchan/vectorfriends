@@ -45,38 +45,52 @@ export async function POST(request: NextRequest) {
       const data = await r.json();
       console.log(data['data'][0]['entity']);
       const entityData = data['data'][0]['entity'];
-      // Funzies: image, current employment
       
-      // Vector embeddings: description, allDescriptions, employments.description
-      console.log("[Weaviate] description: ", entityData['description']);
-      console.log("[Weaviate] allDescriptions: ", entityData['allDescriptions']);
-      console.log("[Weaviate] employments.description: ", entityData['employments'].map(employment => employment['description']));
-      // KG nodes: employments.employer, skills, 
-      console.log("[Neo4j] skills: ", entityData['skills'])
-      console.log("[Neo4j] employments.employer: ", entityData['employments'].map(employment => employment['employer']['name']));
+      // Extract the data we need
+      const extractedData = {
+        // Funzies: image, current employment
+        image: entityData['image'] as string | undefined,
+        currentEmployment: entityData['employments']?.[0] as {
+          description?: string;
+          employer?: { name: string };
+          title?: string;
+          from?: string;
+          to?: string;
+        } | undefined,
+        
+        // Vector embeddings: description, allDescriptions, employments.description
+        description: entityData['description'] as string | undefined,
+        allDescriptions: entityData['allDescriptions'] as string[] | undefined,
+        employmentDescriptions: (entityData['employments'] as Array<{ description?: string }> | undefined)?.map(employment => employment['description']).filter(Boolean) || [],
+        
+        // KG nodes: employments.employer, skills
+        skills: (entityData['skills'] as Array<{ name: string }> | undefined)?.map(skill => skill.name) || [],
+        employers: (entityData['employments'] as Array<{ employer?: { name: string } }> | undefined)?.map(employment => employment['employer']?.name).filter(Boolean) || []
+      };
+
+      console.log("[Weaviate] description: ", extractedData.description);
+      console.log("[Weaviate] allDescriptions: ", extractedData.allDescriptions);
+      console.log("[Weaviate] employments.description: ", extractedData.employmentDescriptions);
+      console.log("[Neo4j] skills: ", extractedData.skills);
+      console.log("[Neo4j] employments.employer: ", extractedData.employers);
+
+      return new NextResponse(
+        JSON.stringify({
+          response: "success",
+          data: extractedData
+        }), {
+        status: 200,
+      });
 
     }
     catch (error) {
       console.log(error);
-    }
-
-    try {
       return new NextResponse(
-        JSON.stringify(
-          {
-            "response": "success", 
-          }), {
-        status: 200,
-      });
-    } catch (error) {
-
-      return new NextResponse(
-        JSON.stringify(
-          {
-            "response": "error", 
-            "error": error
-          }), {
-        status: 401,
+        JSON.stringify({
+          response: "error", 
+          error: error
+        }), {
+        status: 500,
       });
     }
 
