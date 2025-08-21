@@ -74,8 +74,8 @@ export default function Home() {
 
                     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
                         <label>
-                            First Name<br/>
-                            <input type="text" placeholder="Jenna Doe" name="firstName"  className="input input-bordered w-full" onChange={handleChange}  />
+                            Full Name<br/>
+                            <input type="text" placeholder="Jenna Doe" name="fullName"  className="input input-bordered w-full" onChange={handleChange}  />
 
                         </label>
                         <label>
@@ -84,7 +84,7 @@ export default function Home() {
                         </label>
                         <label>
                             LinkedIn URL<br/>
-                            <input type="url" placeholder="https://linkedin.com/in/yourprofile" name="linkedInUrl"  className="input input-bordered w-full" onChange={handleChange}  />
+                            <input type="url" placeholder="https://linkedin.com/in/yourprofile" name="linkedInUri"  className="input input-bordered w-full" onChange={handleChange}  />
                         </label>
 
                         <label>
