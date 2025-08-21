@@ -64,15 +64,18 @@ export async function POST(request: NextRequest) {
         employmentDescriptions: (entityData['employments'] as Array<{ description?: string }> | undefined)?.map(employment => employment['description']).filter(Boolean) || [],
         
         // KG nodes: employments.employer, skills
-        skills: (entityData['skills'] as Array<{ name: string }> | undefined)?.map(skill => skill.name) || [],
-        employers: (entityData['employments'] as Array<{ employer?: { name: string } }> | undefined)?.map(employment => employment['employer']?.name).filter(Boolean) || []
+        skills: (entityData['skills'] as Array<{ name: string }> | undefined) || [],
+        employments: (entityData['employments'] as Array<{ employer?: { name: string }; description?: string; title?: string; from?: string; to?: string }> | undefined) || [],
+        fullName: fullName,
+        linkedInUri: linkedInUri,
+        email: email,
       };
 
       console.log("[Weaviate] description: ", extractedData.description);
       console.log("[Weaviate] allDescriptions: ", extractedData.allDescriptions);
       console.log("[Weaviate] employments.description: ", extractedData.employmentDescriptions);
       console.log("[Neo4j] skills: ", extractedData.skills);
-      console.log("[Neo4j] employments.employer: ", extractedData.employers);
+      console.log("[Neo4j] employments.employer: ", extractedData.employments);
 
       return new NextResponse(
         JSON.stringify({

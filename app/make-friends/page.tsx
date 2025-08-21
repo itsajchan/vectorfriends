@@ -61,6 +61,20 @@ export default function Home() {
 
     // Now with the Diffbot data, we can ingest it into Neo4jason
     // TODO: Jason :]
+    const neo4j_response = await fetch(
+        "/api/neo4j-ingest",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify(
+                data
+            )
+        }
+    );
+    const data3 = await neo4j_response.json();
+    console.log(neo4j_response.status)
 
 
     setLoading(false);
