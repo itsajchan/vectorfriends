@@ -9,11 +9,9 @@ export default function Home() {
     const [error, setError] = useState(false);
 
   const [form, setForm] = useState({
-    techStack: "",
-    learnTech: "",
-    openSource: "",
     email: "",
     firstName: "",
+    linkedInUrl: "",
     agreeTerms: false,
   });
 
@@ -29,7 +27,7 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     const response = await fetch(
-        "/api/submit-profile",
+        "/api/extract-linkedin-data",
         {
             headers: {
                 "Content-Type": "application/json",
@@ -56,9 +54,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen min-w-full p-10 bg-gradient-radial from-yellow-200 via-sky-200 to-green-300 flex items-center justify-center">
-        <Image src="/weaviate-logo.svg" width={200} height={200} alt={"Weaviate logo"}/>
+        <div className="flex space-x-10">
+            <Image src="/weaviate-logo.svg" width={200} height={200} alt={"Weaviate logo"}/>
+            <Image src="/diffbot-logo.svg" width={200} height={200} alt={"Diffbot logo"}/>
+            <Image src="/neo4j-logo.svg" width={200} height={200} alt={"Neo4j logo"}/>
+        </div>
         <h1 className="text-center text-4xl mt-10 pb-10">
-            Find My Vector Friends
+            Find My Hacker Friends
         </h1>
         { loading ? 
         
@@ -80,42 +82,9 @@ export default function Home() {
                             Email Address<br/>
                             <input type="email" placeholder="favoritevectordb@weaviate.io" name="email"  className="input input-bordered w-full" onChange={handleChange}  />
                         </label>
-{/* 
-                        <div className="flex space-x-2">
-
-                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
-                            <div className="pb-1">
-                                I'm using Weaviate for a project today!
-                            </div>
-                        </div>
-                        <div className="flex space-x-2">
-
-                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
-                            <div className="pb-1">
-                                I want to use Weaviate in a new project!
-                            </div>
-                        </div>
-                        <div className="flex space-x-2">
-
-                            <input type="checkbox"  className="checkbox" name="usingWeaviate" onChange={handleChange}  />
-                            <div className="pb-1">
-                                I want you to send me an email with the notes from this talk and more information about Weaviate!
-                            </div>
-                        </div> */}
-
-
                         <label>
-                            What’s the technology stack that you’re most comfortable with?
-                            <input type="text" placeholder="NextJS + Django + PostgreSQL etc" name="techStack"  className="input input-bordered w-full" onChange={handleChange}  />
-
-                        </label>
-                        <label>
-                            What are some technologies you really want to learn at the moment?
-                            <input type="text" placeholder="Machine Learning and Data Science!" name="learnTech" className="input input-bordered w-full" onChange={handleChange}  />
-                        </label>
-                        <label>
-                            What is your favorite open source project and what does it do?
-                            <input type="text" placeholder="Verba!" name="openSource" className="input input-bordered w-full" onChange={handleChange}  />
+                            LinkedIn URL<br/>
+                            <input type="url" placeholder="https://linkedin.com/in/yourprofile" name="linkedInUrl"  className="input input-bordered w-full" onChange={handleChange}  />
                         </label>
 
                         <label>
